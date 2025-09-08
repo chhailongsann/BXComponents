@@ -32,13 +32,13 @@ class ViewController: UIViewController {
       $0.top(12)
         .centerX()
     }
-    blueCapsule.layout(in: view) {
-      $0.width(300)
-        .height(100)
+    redCapsule.layout(in: view) {
+      $0.width(100)
+        .height(200)
         .centerX()
     }
     
-    blueTopConstraint = blueCapsule.constraintTop(to: button.bottomAnchor, constant: 0)
+    blueTopConstraint = redCapsule.constraintTop(to: button.bottomAnchor, constant: 0)
 
     
     

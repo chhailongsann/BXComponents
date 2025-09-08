@@ -64,7 +64,7 @@ public class Capsule: UIView {
     
     let borderLayer = CAShapeLayer()
     borderLayer.path = path.cgPath
-    borderLayer.borderWidth = lineWidth
+    borderLayer.lineWidth = lineWidth
     borderLayer.strokeColor = strokeColor?.cgColor
     borderLayer.fillColor = fillColor?.cgColor
     borderLayer.frame = rect
