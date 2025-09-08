@@ -227,6 +227,19 @@ extension UIView {
   }
   
   // MARK: Constraints (for animation)
+
+  func constraintWidth(_ constant: CGFloat) -> NSLayoutConstraint {
+    let widthConstraint = widthAnchor.constraint(equalToConstant: constant)
+    widthConstraint.isActive = true
+    return widthConstraint
+  }
+
+  func constraintHeight(_ constant: CGFloat) -> NSLayoutConstraint {
+    let heightConstraint = heightAnchor.constraint(equalToConstant: constant)
+    heightConstraint.isActive = true
+    return heightConstraint
+  }
+
   func constraintTop(to anchor: NSLayoutYAxisAnchor, constant: CGFloat = 0) -> NSLayoutConstraint {
     let topConstraint = topAnchor.constraint(equalTo: anchor, constant: constant)
     topConstraint.isActive = true
