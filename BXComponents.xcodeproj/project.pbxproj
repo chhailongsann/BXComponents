@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		85AB19B22E706CAB00315BC7 /* BXAnchor in Frameworks */ = {isa = PBXBuildFile; productRef = 85AB19B12E706CAB00315BC7 /* BXAnchor */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		85397B552E6DB79500F494BA /* BXComponents.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BXComponents.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -36,6 +40,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				85AB19B22E706CAB00315BC7 /* BXAnchor in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -78,6 +83,7 @@
 			);
 			name = BXComponents;
 			packageProductDependencies = (
+				85AB19B12E706CAB00315BC7 /* BXAnchor */,
 			);
 			productName = BXComponents;
 			productReference = 85397B552E6DB79500F494BA /* BXComponents.app */;
@@ -107,6 +113,9 @@
 			);
 			mainGroup = 85397B4C2E6DB79500F494BA;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				85AB19B02E706CAB00315BC7 /* XCRemoteSwiftPackageReference "BXAnchor" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 85397B562E6DB79500F494BA /* Products */;
 			projectDirPath = "";
@@ -339,6 +348,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		85AB19B02E706CAB00315BC7 /* XCRemoteSwiftPackageReference "BXAnchor" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/chhailongsann/BXAnchor.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.6;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		85AB19B12E706CAB00315BC7 /* BXAnchor */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 85AB19B02E706CAB00315BC7 /* XCRemoteSwiftPackageReference "BXAnchor" */;
+			productName = BXAnchor;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 85397B4D2E6DB79500F494BA /* Project object */;
 }

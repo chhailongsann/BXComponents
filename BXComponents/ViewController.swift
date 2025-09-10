@@ -6,26 +6,26 @@
 //
 
 import UIKit
+import BXAnchor
 
 class ViewController: UIViewController {
   
   var isJiggling: Bool = false
   
-  let redCapsule = Capsule(fillColor: .systemRed)
-  var widthConstraint, heightConstraint: NSLayoutConstraint?
+  let pageControl: BXPageControl = .init(numberOfPages: 3)
+  let redCapsule: Capsule = .init()
   override func viewDidLoad() {
     super.viewDidLoad()
     view.backgroundColor = .systemBackground
     
+    var heightContraint: NSLayoutConstraint!
     let button = UIButton(type: .close)
     let close = UIAction { [unowned self] _ in
-      isJiggling.toggle()
-      widthConstraint?.constant = isJiggling ? 100:300
-      heightConstraint?.constant = isJiggling ? 300:100
-
+     
+      heightContraint.constant = 29
       UIView.animate(withDuration: 0.31, delay: 0, options: .overrideInheritedCurve) {
         self.view.layoutSubviews()
-        self.redCapsule.setNeedsDisplay()
+        self.pageControl.setNeedsDisplay()
       }
     }
     button.addAction(close, for: .touchUpInside)
@@ -34,13 +34,14 @@ class ViewController: UIViewController {
       $0.top(12)
         .centerX()
     }
+    redCapsule.backgroundColor = .red
     redCapsule.layout(in: view) {
-      $0.center()
-      $0.backgroundColor = .red
+      $0.width(20)
+        .centerX()
+        .constraintTop(to: view.centerYAnchor, constant: 0)
     }
-    widthConstraint = redCapsule.constraintWidth(300)
-    heightConstraint = redCapsule.constraintHeight(100)
-
+    heightContraint = redCapsule.constraintHeight(100)
+    pageControl.backgroundColor = .yellow
     view.bringSubviewToFront(button)
   }
   // MARK: ACTIONS
