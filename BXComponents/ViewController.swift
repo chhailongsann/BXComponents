@@ -16,6 +16,7 @@ class ViewController: UIViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
+    view.backgroundColor = .systemBackground
   }
   override func loadView() {
     super.loadView()
@@ -24,9 +25,8 @@ class ViewController: UIViewController {
       $0.center()
     }
     
-    pageControl.setNumberOfPages(4)
-    pageControl.pageIndicatorTintColor = .yellow
-    pageControl.currentPageIndicatorTintColor = .red
+    pageControl.setNumberOfPages(24)
+
   }
   // MARK: ACTIONS
   
