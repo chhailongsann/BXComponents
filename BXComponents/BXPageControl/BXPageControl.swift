@@ -15,9 +15,9 @@ class BXPageControl: UIView {
     case instagram
   }
 
-
-  private var dots: [UIView?] = []
-  private var dotWidthConstraints: [NSLayoutConstraint] = []
+  private var currentPageIndicatorView: UIView?
+  private var currentPageIndicatorViewLeadingConstraint: NSLayoutConstraint?
+  private var currentPageIndicatorViewTrailingConstraint: NSLayoutConstraint?
 
   private var visualEffectView: UIVisualEffectView = {
     let view = UIVisualEffectView(effect: UIBlurEffect(style: .systemChromeMaterial))
@@ -28,6 +28,7 @@ class BXPageControl: UIView {
     let stackView = UIStackView()
     stackView.spacing = spacing
     stackView.axis = .horizontal
+    stackView.layoutMargins = .zero
     return stackView
   }()
   
@@ -40,7 +41,7 @@ class BXPageControl: UIView {
     }
   }
    
-  var pageIndicatorTintColor: UIColor = .secondaryLabel {
+  var pageIndicatorTintColor: UIColor = .secondaryLabel.withAlphaComponent(0.4) {
     didSet {
       let dots = stackView.arrangedSubviews
       dots.forEach {
@@ -61,26 +62,20 @@ class BXPageControl: UIView {
     assert(numberOfPages > 0, "Number of pages must be greater than zero")
 
     self.numberOfPages = numberOfPages
-    self.dots = Array(repeating: nil, count: numberOfPages)
     stackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
-    (0..<numberOfPages).forEach { i in
+    
+    // +1 view
+    (0...numberOfPages).forEach { i in
         let dot = UIView()
       dot.tag = i
       dot.height(size)
-
-      let widthConstraint = dot.widthAnchor.constraint(equalToConstant: i == currentPage ? size * 3 : size)
-      widthConstraint.priority = .defaultHigh
-      widthConstraint.isActive = true
-      dotWidthConstraints.append(widthConstraint)
-
+      dot.minWidth(size)
 
       dot.clipsToBounds = true
       dot.layer.cornerRadius = size / 2
-      dot.backgroundColor = i == currentPage ? currentPageIndicatorTintColor : pageIndicatorTintColor
+      dot.backgroundColor = pageIndicatorTintColor
 
       stackView.addArrangedSubview(dot)
-
-      self.dots[i] = dot
     }
   }
   
@@ -88,20 +83,13 @@ class BXPageControl: UIView {
     assert(currentPage >= 0 && currentPage < numberOfPages, "Current page index must be between 0 and \(numberOfPages - 1)")
     Haptic.selection.generate()
     self.currentPage = currentPage
-    self.dots.forEach { dot in
-      if let dot {
-        dot.backgroundColor = dot.tag == currentPage ? currentPageIndicatorTintColor : pageIndicatorTintColor
-      }
-    }
-    dotWidthConstraints.enumerated().forEach { i, constraint in
-      if i != currentPage {
-        constraint.constant = size
-      } else {
-        constraint.constant = size * 3
-      }
-    }
+    self.currentPageIndicatorViewTrailingConstraint?.constant = CGFloat(currentPage) * (size + spacing) + spacing + size + size
     if withAnimation {
       UIView.animate(withDuration: 0.25) {
+        self.layoutIfNeeded()
+      }
+      self.currentPageIndicatorViewLeadingConstraint?.constant = CGFloat(currentPage) * (size + spacing)
+      UIView.animate(withDuration: 0.65) {
         self.layoutIfNeeded()
       }
     }
@@ -155,5 +143,19 @@ class BXPageControl: UIView {
     stackView.layout(in: self) {
       $0.fill(padding: .all(padding))
     }
+    currentPageIndicatorView = UIView()
+    currentPageIndicatorView?.backgroundColor = currentPageIndicatorTintColor
+    currentPageIndicatorView?.clipsToBounds = true
+    currentPageIndicatorView?.layer.cornerRadius = size / 2
+    currentPageIndicatorView?.layout(in: self) {
+      $0.width(size * 2 + spacing)
+        .height(size)
+        .centerY()
+    }
+    self.currentPageIndicatorViewLeadingConstraint = currentPageIndicatorView?.leadingAnchor.constraint(equalTo: stackView.leadingAnchor)
+    self.currentPageIndicatorViewLeadingConstraint?.isActive = true
+    
+    self.currentPageIndicatorViewTrailingConstraint = currentPageIndicatorView?.trailingAnchor.constraint(equalTo: stackView.leadingAnchor, constant: size * 2 + spacing)
+    self.currentPageIndicatorViewTrailingConstraint?.isActive = true
   }
 }
