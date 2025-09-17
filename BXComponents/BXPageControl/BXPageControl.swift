@@ -8,7 +8,13 @@
 import UIKit
 
 class BXPageControl: UIView {
-  
+
+  enum Alignment {
+    case leading
+    case trailing
+    case center
+  }
+
   enum Style {
     case dots
     case snakes
@@ -16,8 +22,8 @@ class BXPageControl: UIView {
   }
 
   private var currentPageIndicatorView: UIView?
-  private var currentPageIndicatorViewLeadingConstraint: NSLayoutConstraint?
-  private var currentPageIndicatorViewTrailingConstraint: NSLayoutConstraint?
+//  private var currentPageIndicatorViewLeadingConstraint: NSLayoutConstraint?
+//  private var currentPageIndicatorViewTrailingConstraint: NSLayoutConstraint?
 
   private var visualEffectView: UIVisualEffectView = {
     let view = UIVisualEffectView(effect: UIBlurEffect(style: .systemChromeMaterial))
@@ -54,26 +60,38 @@ class BXPageControl: UIView {
   private var size: CGFloat = 8
   private var padding: CGFloat = 6
   private var currentPage: Int = 0
-  
+
+
   
   var numberOfPages: Int = 1
-  
+  var alignment: Alignment = .center
+
   public func setNumberOfPages(_ numberOfPages: Int) {
     assert(numberOfPages > 0, "Number of pages must be greater than zero")
 
     self.numberOfPages = numberOfPages
     stackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
     
-    // +1 view
-    (0...numberOfPages).forEach { i in
-        let dot = UIView()
+    (0..<numberOfPages).forEach { i in
+      let dot = UIView()
+      dot.backgroundColor = i == currentPage ? currentPageIndicatorTintColor : pageIndicatorTintColor
       dot.tag = i
       dot.height(size)
-      dot.minWidth(size)
+      dot.width(size)
 
       dot.clipsToBounds = true
       dot.layer.cornerRadius = size / 2
-      dot.backgroundColor = pageIndicatorTintColor
+
+      var scale: CGFloat = 1
+      let offset = abs(i - currentPage)
+      if offset > 1 {
+        scale = 1 - (CGFloat(offset * 10) / 100)
+      }
+      if scale < 0.4 {
+        scale = 0.4
+      }
+
+      dot.transform = CGAffineTransform(scaleX: scale, y: scale)
 
       stackView.addArrangedSubview(dot)
     }
@@ -83,15 +101,51 @@ class BXPageControl: UIView {
     assert(currentPage >= 0 && currentPage < numberOfPages, "Current page index must be between 0 and \(numberOfPages - 1)")
     Haptic.selection.generate()
     self.currentPage = currentPage
-    self.currentPageIndicatorViewTrailingConstraint?.constant = CGFloat(currentPage) * (size + spacing) + spacing + size + size
+
+    stackView.arrangedSubviews.forEach { dot in
+      let i = dot.tag
+      var scale: CGFloat = 1
+      var alpha: CGFloat = 1
+      let offset = abs(i - currentPage)
+      if offset >= 1 {
+        scale = 1 - (CGFloat(offset * 20) / 100)
+        alpha = 1 - (CGFloat(offset * 15) / 100)
+      }
+      if scale < 0.4 {
+        scale = 0.4
+      }
+//      if alpha < 0.4 {
+//        alpha = 0.4
+//      }
+      dot.backgroundColor = i == currentPage ? currentPageIndicatorTintColor : pageIndicatorTintColor
+      dot.width(size)
+      UIView.animate(withDuration: 0.25) {
+        dot.transform = CGAffineTransform(scaleX: scale, y: scale)
+      }
+//      dot.transform = CGAffineTransform(scaleX: scale, y: scale)
+
+    }
+    
+
     if withAnimation {
+//      self.currentPageIndicatorViewTrailingConstraint?.constant = CGFloat(currentPage) * (size + spacing) + spacing + size + size
+//      self.currentPageIndicatorViewLeadingConstraint?.constant = CGFloat(currentPage) * (self.size + self.spacing)
+
       UIView.animate(withDuration: 0.25) {
         self.layoutIfNeeded()
       }
-      self.currentPageIndicatorViewLeadingConstraint?.constant = CGFloat(currentPage) * (size + spacing)
-      UIView.animate(withDuration: 0.65) {
-        self.layoutIfNeeded()
-      }
+
+//      self.currentPageIndicatorViewLeadingConstraint?.constant = CGFloat(currentPage) * (self.size + self.spacing)
+//      UIView.animate(
+//        withDuration: 0.65,
+//          delay: 0,
+//          options: [.curveEaseInOut, .allowUserInteraction],
+//          animations: {
+//            self.layoutIfNeeded()
+//          },
+//          completion: { finished in
+//          }
+//      )
     }
   }
 
@@ -129,33 +183,55 @@ class BXPageControl: UIView {
     }
   }
 
+  public func bind(_ collectionView: UICollectionView) {
+    if let layout = collectionView.collectionViewLayout as? SnapToCenterCollectionViewLayout {
+      layout.centerFirstItem = true
+    }
+    collectionView.reloadData()
+    collectionView.layoutIfNeeded()
+
+    let numberOfSections = collectionView.numberOfSections
+    var allItems: Int = 0
+    for section in 0..<numberOfSections {
+      let numberOfItems = collectionView.numberOfItems(inSection: section)
+      allItems += numberOfItems
+    }
+    setNumberOfPages(allItems)
+  }
   
   private func setupViews() {
-    clipsToBounds = true
-    layer.cornerRadius = self.padding + (self.size / 2)
+
     isUserInteractionEnabled = true
     addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleTap)))
 
-    visualEffectView.layout(in: self) {
-      $0.fill()
-    }
-
     stackView.layout(in: self) {
-      $0.fill(padding: .all(padding))
+      $0.top(padding)
+        .bottom(padding)
+        .centerX()
     }
-    currentPageIndicatorView = UIView()
-    currentPageIndicatorView?.backgroundColor = currentPageIndicatorTintColor
-    currentPageIndicatorView?.clipsToBounds = true
-    currentPageIndicatorView?.layer.cornerRadius = size / 2
-    currentPageIndicatorView?.layout(in: self) {
-      $0.width(size * 2 + spacing)
-        .height(size)
-        .centerY()
+    visualEffectView.layout(in: self) {
+      $0.top(constraint: stackView.topAnchor, -padding)
+        .leading(constraint: stackView.leadingAnchor, -padding)
+        .bottom(constraint: stackView.bottomAnchor, padding)
+        .trailing(constraint: stackView.trailingAnchor, padding)
     }
-    self.currentPageIndicatorViewLeadingConstraint = currentPageIndicatorView?.leadingAnchor.constraint(equalTo: stackView.leadingAnchor)
-    self.currentPageIndicatorViewLeadingConstraint?.isActive = true
-    
-    self.currentPageIndicatorViewTrailingConstraint = currentPageIndicatorView?.trailingAnchor.constraint(equalTo: stackView.leadingAnchor, constant: size * 2 + spacing)
-    self.currentPageIndicatorViewTrailingConstraint?.isActive = true
+    sendSubviewToBack(visualEffectView)
+    visualEffectView.clipsToBounds = true
+    visualEffectView.layer.cornerRadius = self.padding + (self.size / 2)
+
+//    currentPageIndicatorView = UIView()
+//    currentPageIndicatorView?.backgroundColor = currentPageIndicatorTintColor
+//    currentPageIndicatorView?.clipsToBounds = true
+//    currentPageIndicatorView?.layer.cornerRadius = size / 2
+//    currentPageIndicatorView?.layout(in: self) {
+//      $0.width(size * 2 + spacing)
+//        .height(size)
+//        .centerY()
+//    }
+//    self.currentPageIndicatorViewLeadingConstraint = currentPageIndicatorView?.leadingAnchor.constraint(equalTo: stackView.leadingAnchor)
+//    self.currentPageIndicatorViewLeadingConstraint?.isActive = true
+//    
+//    self.currentPageIndicatorViewTrailingConstraint = currentPageIndicatorView?.trailingAnchor.constraint(equalTo: stackView.leadingAnchor, constant: size * 2 + spacing)
+//    self.currentPageIndicatorViewTrailingConstraint?.isActive = true
   }
 }
