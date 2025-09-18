@@ -71,81 +71,143 @@ class BXPageControl: UIView {
 
     self.numberOfPages = numberOfPages
     stackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
-    
-    (0..<numberOfPages).forEach { i in
-      let dot = UIView()
-      dot.backgroundColor = i == currentPage ? currentPageIndicatorTintColor : pageIndicatorTintColor
-      dot.tag = i
-      dot.height(size)
-      dot.width(size)
-
-      dot.clipsToBounds = true
-      dot.layer.cornerRadius = size / 2
-
-      var scale: CGFloat = 1
-      let offset = abs(i - currentPage)
-      if offset > 1 {
-        scale = 1 - (CGFloat(offset * 10) / 100)
+    subviews.forEach { subview in
+      if subview.isKind(of: IndicatorView.self) {
+        subview.removeFromSuperview()
       }
-      if scale < 0.4 {
-        scale = 0.4
-      }
-
-      dot.transform = CGAffineTransform(scaleX: scale, y: scale)
-
-      stackView.addArrangedSubview(dot)
     }
-  }
-  
-  public func setCurrentPage(_ currentPage: Int, withAnimation: Bool = true) {
-    assert(currentPage >= 0 && currentPage < numberOfPages, "Current page index must be between 0 and \(numberOfPages - 1)")
-    Haptic.selection.generate()
-    self.currentPage = currentPage
+//    (0..<numberOfPages).forEach { i in
+//      let dot = UIView()
+//      dot.backgroundColor = i == currentPage ? currentPageIndicatorTintColor : pageIndicatorTintColor
+//      dot.tag = i
+//      dot.height(size)
+//      dot.width(size)
+//
+//      dot.clipsToBounds = true
+//      dot.layer.cornerRadius = size / 2
+//
+//      var scale: CGFloat = 1
+//      var alpha: CGFloat = 1
+//      let offset = abs(i - currentPage)
+//      if offset > 1 {
+//        scale = 1 - (CGFloat(offset * 10) / 100)
+//      }
+//      if scale < 0.2 {
+//        scale = 0.2
+//      }
+//      if alpha < 0.2 {
+//        alpha = 0.2
+//      }
+//      dot.backgroundColor = i == currentPage ? currentPageIndicatorTintColor : pageIndicatorTintColor
+//      dot.width(size)
+//      UIView.animate(withDuration: 0.25) {
+//        dot.transform = CGAffineTransform(scaleX: scale, y: scale)
+//        dot.alpha = alpha
+//      }
+//      stackView.addArrangedSubview(dot)
+//    }
+    (0..<numberOfPages).forEach { i in
+      let circle = IndicatorView()
+//      circle.backgroundColor = pageIndicatorTintColor
+      circle.backgroundColor = i == currentPage ? currentPageIndicatorTintColor : pageIndicatorTintColor
 
-    stackView.arrangedSubviews.forEach { dot in
-      let i = dot.tag
+      circle.tag = i
+      circle.height(size)
+      circle.width(size)
+
+      circle.clipsToBounds = true
+      circle.layer.cornerRadius = size / 2
       var scale: CGFloat = 1
       var alpha: CGFloat = 1
       let offset = abs(i - currentPage)
-      if offset >= 1 {
-        scale = 1 - (CGFloat(offset * 20) / 100)
+      if offset == 0 {
+        scale = 1.1
+        alpha = 1
+      } else {
+        scale = 1 - (CGFloat(offset * 10) / 100)
         alpha = 1 - (CGFloat(offset * 15) / 100)
       }
-      if scale < 0.4 {
-        scale = 0.4
+      if scale < 0.2 {
+        scale = 0.2
       }
-//      if alpha < 0.4 {
-//        alpha = 0.4
+//      if alpha < 0.2 {
+//        alpha = 0.2
 //      }
-      dot.backgroundColor = i == currentPage ? currentPageIndicatorTintColor : pageIndicatorTintColor
-      dot.width(size)
-      UIView.animate(withDuration: 0.25) {
-        dot.transform = CGAffineTransform(scaleX: scale, y: scale)
+      circle.layout(in: self) {
+        $0.center()
       }
-//      dot.transform = CGAffineTransform(scaleX: scale, y: scale)
-
+      circle.alpha = alpha
+      circle.transform = CGAffineTransform(translationX: CGFloat(i - currentPage) * (size + spacing), y: 0).scaledBy(x: scale, y: scale)
+//      circle.transform = circle.transform.scaledBy(x: scale, y: scale)
     }
-    
+//    let circle = UIView()
+//    circle.backgroundColor = currentPageIndicatorTintColor
+//    circle.height(size)
+//    circle.width(size)
+//    circle.tag = -1
+//
+//    circle.clipsToBounds = true
+//    circle.layer.cornerRadius = size / 2
+//    circle.layout(in: self) { $0.center() }
+  }
+  
+  public func setCurrentPage(_ currentPage: Int, withAnimation: Bool = true) {
+    if currentPage < 0 || currentPage >= numberOfPages {
+      return
+    }
+    Haptic.selection.generate()
+    self.currentPage = currentPage
 
-    if withAnimation {
-//      self.currentPageIndicatorViewTrailingConstraint?.constant = CGFloat(currentPage) * (size + spacing) + spacing + size + size
-//      self.currentPageIndicatorViewLeadingConstraint?.constant = CGFloat(currentPage) * (self.size + self.spacing)
+//    stackView.arrangedSubviews.forEach { dot in
+//      let i = dot.tag
+//      var scale: CGFloat = 1
+//      var alpha: CGFloat = 1
+//      let offset = abs(i - currentPage)
+//      if offset >= 1 {
+//        scale = 1 - (CGFloat(offset * 20) / 100)
+//        alpha = 1 - (CGFloat(offset * 15) / 100)
+//      }
+//      if scale < 0.2 {
+//        scale = 0.2
+//      }
+//      if alpha < 0.2 {
+//        alpha = 0.2
+//      }
+//      dot.backgroundColor = i == currentPage ? currentPageIndicatorTintColor : pageIndicatorTintColor
+//      dot.width(size)
+//      UIView.animate(withDuration: 0.25) {
+//        dot.transform = CGAffineTransform(scaleX: scale, y: scale)
+//        dot.alpha = alpha
+//      }
+//    }
 
-      UIView.animate(withDuration: 0.25) {
-        self.layoutIfNeeded()
+    subviews.forEach { circle in
+      if circle.isKind(of: IndicatorView.self) {
+        let i = circle.tag
+        var scale: CGFloat = 1
+        var alpha: CGFloat = 1
+        let offset = abs(i - currentPage)
+        if offset == 0 {
+          scale = 1.1
+          alpha = 1
+        } else {
+          scale = 1 - (CGFloat(offset * 10) / 100)
+          alpha = 1 - (CGFloat(offset * 15) / 100)
+        }
+        if scale < 0.2 {
+          scale = 0.2
+        }
+
+        UIView.animate(withDuration: 0.25) {
+          circle.backgroundColor = i == currentPage ? self.currentPageIndicatorTintColor : self.pageIndicatorTintColor
+          circle.alpha = alpha
+          circle.transform = CGAffineTransform(translationX: CGFloat(i - currentPage) * (self.size + self.spacing), y: 0)
+//          circle.transform = CGAffineTransform(scaleX: scale, y: scale)
+//          circle.transform = circle.transform.scaledBy(x: scale, y: scale)
+        }
+        circle.transform = circle.transform.scaledBy(x: scale, y: scale)
+
       }
-
-//      self.currentPageIndicatorViewLeadingConstraint?.constant = CGFloat(currentPage) * (self.size + self.spacing)
-//      UIView.animate(
-//        withDuration: 0.65,
-//          delay: 0,
-//          options: [.curveEaseInOut, .allowUserInteraction],
-//          animations: {
-//            self.layoutIfNeeded()
-//          },
-//          completion: { finished in
-//          }
-//      )
     }
   }
 
@@ -174,15 +236,6 @@ class BXPageControl: UIView {
     fatalError("init(coder:) has not been implemented")
   }
 
-  @objc
-  func handleTap() {
-    if currentPage < numberOfPages - 1 {
-      next()
-    } else {
-      setCurrentPage(0)
-    }
-  }
-
   public func bind(_ collectionView: UICollectionView) {
     if let layout = collectionView.collectionViewLayout as? SnapToCenterCollectionViewLayout {
       layout.centerFirstItem = true
@@ -200,10 +253,6 @@ class BXPageControl: UIView {
   }
   
   private func setupViews() {
-
-    isUserInteractionEnabled = true
-    addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleTap)))
-
     stackView.layout(in: self) {
       $0.top(padding)
         .bottom(padding)
@@ -233,5 +282,11 @@ class BXPageControl: UIView {
 //    
 //    self.currentPageIndicatorViewTrailingConstraint = currentPageIndicatorView?.trailingAnchor.constraint(equalTo: stackView.leadingAnchor, constant: size * 2 + spacing)
 //    self.currentPageIndicatorViewTrailingConstraint?.isActive = true
+  }
+}
+
+extension BXPageControl {
+  static var `default`: BXPageControl {
+    return .init(style: .dots)
   }
 }

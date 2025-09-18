@@ -15,7 +15,7 @@ class HorizontalSlideViewController: UIViewController, UICollectionViewDataSourc
   var willChangeFocusItem: ((MovementState) -> Void)?
   var didSelectItemAt: ((Int) -> Void)?
 
-  let pageControl: BXPageControl = .init(style: .dots)
+  let pageControl: BXPageControl = .default
 
   lazy var collectionView: UICollectionView = {
     let layout = SnapToCenterCollectionViewLayout()
@@ -90,7 +90,7 @@ class HorizontalSlideViewController: UIViewController, UICollectionViewDataSourc
 //  }
 
   // MARK: - DataSource (example)
-  func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int { 12 }
+  func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int { 34 }
   func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
     // dequeue configured cell
     let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "RandomizedCollection", for: indexPath) as! RandomizedCollection
@@ -104,12 +104,7 @@ class HorizontalSlideViewController: UIViewController, UICollectionViewDataSourc
 
 extension HorizontalSlideViewController: FocusChangeDelegate {
   func focusContainer(_ container: FocusedContaining, willChangeElement inFocus: Int, to newInFocus: Int) {
-    let movement: MovementState = inFocus < newInFocus ? .backward : .forward
-    if movement == .forward {
-      pageControl.previous()
-    } else {
-      pageControl.next()
-    }
+    pageControl.setCurrentPage(newInFocus)
   }
 
   func focusContainer(_ container: FocusedContaining, didChangeElement inFocus: Int) {
