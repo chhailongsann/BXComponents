@@ -15,7 +15,7 @@ class HorizontalSlideViewController: UIViewController, UICollectionViewDataSourc
   var willChangeFocusItem: ((MovementState) -> Void)?
   var didSelectItemAt: ((Int) -> Void)?
 
-  let pageControl: BXPageControl = .default
+  let pageControl: BXPageControl = BXPageControl.centerIndicator
 
   lazy var collectionView: UICollectionView = {
     let layout = SnapToCenterCollectionViewLayout()
@@ -60,7 +60,7 @@ class HorizontalSlideViewController: UIViewController, UICollectionViewDataSourc
         .leading()
         .trailing()
     }
-    pageControl.bind(collectionView)
+    pageControl.setNumberOfPages(numberOfItems)
 
 
     // center first/last by setting inset
@@ -90,7 +90,8 @@ class HorizontalSlideViewController: UIViewController, UICollectionViewDataSourc
 //  }
 
   // MARK: - DataSource (example)
-  func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int { 34 }
+  let numberOfItems: Int = 14
+  func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int { numberOfItems }
   func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
     // dequeue configured cell
     let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "RandomizedCollection", for: indexPath) as! RandomizedCollection

@@ -12,7 +12,7 @@ class ViewController: UIViewController {
   
   var isJiggling: Bool = false
   
-  let pageControl: BXPageControl = .init(style: .dots)
+  let pageControl: BXPageControl = .init(alignment: .center)
   let sliderView = HorizontalSlideViewController()
 
   override func viewDidLoad() {
@@ -33,10 +33,6 @@ class ViewController: UIViewController {
         .leading()
         .trailing()
     }
-
-
-    pageControl.bind(sliderView.collectionView)
-
     sliderView.didSelectItemAt = { [weak self] index in
       self?.pageControl.setCurrentPage(index)
     }
