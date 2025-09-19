@@ -64,10 +64,14 @@ class BXPageControl: UIView {
       setCurrentPage(self.currentPage)
     }
   }
-  private var size: CGFloat = 6
-  private var currentPageWidthMultiplier: CGFloat = 4
-  private var padding: CGFloat = 8
-  private var currentPage: Int = 0
+  fileprivate var size: CGFloat = 6
+  fileprivate var currentPageWidth: CGFloat {
+    get {
+      return size * 3
+    }
+  }
+  fileprivate var padding: CGFloat = 8
+  fileprivate var currentPage: Int = 0
 
 
   
@@ -91,7 +95,7 @@ class BXPageControl: UIView {
       
       circle.layer.cornerRadius = size / 2
       circle.height(size)
-      let widthConstraint = circle.widthAnchor.constraint(equalToConstant: i == currentPage ? size * currentPageWidthMultiplier : size)
+      let widthConstraint = circle.widthAnchor.constraint(equalToConstant: i == currentPage ? currentPageWidth : size)
       widthConstraint.isActive = true
       indicatorWidthConstraint[i] = widthConstraint
       
@@ -111,7 +115,7 @@ class BXPageControl: UIView {
     stackView.arrangedSubviews.forEach { circle in
       let i = circle.tag
       if let widthConstraint = indicatorWidthConstraint[i] {
-        widthConstraint.constant = i == currentPage ? size * currentPageWidthMultiplier : size
+        widthConstraint.constant = i == currentPage ? currentPageWidth : size
       }
       let scale: CGFloat = i == currentPage ? 1 : 1
       UIView.animate(withDuration: 0.25) {
@@ -199,9 +203,7 @@ extension BXPageControl {
     return .init(alignment: .leading)
   }
   static var centerIndicator: BXPageControl {
-    let pageControl = BXPageControl(alignment: .center)
-    pageControl.spacing = 6
-    return pageControl
+    return .init(alignment: .center)
   }
   static var trailingIndicator: BXPageControl {
     return .init(alignment: .trailing)
