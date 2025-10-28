@@ -116,7 +116,7 @@ extension HorizontalSlideViewController: FocusChangeDelegate {
 class RandomizedCollection: UICollectionViewCell {
   override init(frame: CGRect) {
     super.init(frame: frame)
-    contentView.backgroundColor = .red
+    contentView.backgroundColor = .random
     contentView.layer.cornerRadius = 8
     contentView.clipsToBounds = true
   }
