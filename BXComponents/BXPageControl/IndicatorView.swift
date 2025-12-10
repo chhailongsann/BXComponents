@@ -7,12 +7,18 @@
 
 import UIKit
 
-class IndicatorView: UIView {
-
-  override init(frame: CGRect) {
-    super.init(frame: frame)
-    clipsToBounds = true
+class IndicatorView: UIVisualEffectView {
+  init() {
+    let effect: UIVisualEffect
+    if #available(iOS 26.0, *) {
+      effect = UIGlassEffect(style: .regular)
+    } else {
+      effect = UIBlurEffect(style: .systemChromeMaterial)
+    }
+    super.init(effect: effect)
+    autoresizingMask = [.flexibleWidth, .flexibleHeight]
   }
+
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }

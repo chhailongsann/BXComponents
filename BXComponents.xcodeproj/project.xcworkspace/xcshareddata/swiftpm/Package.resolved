@@ -6,8 +6,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/chhailongsann/BXAnchor.git",
       "state" : {
-        "revision" : "ff8250efc7295d07e007652f31f0c87431541785",
-        "version" : "1.0.10"
+        "revision" : "9ff1762081658b8de79156491491b84bc648ed14",
+        "version" : "1.0.11"
       }
     }
   ],

@@ -15,8 +15,7 @@ class HorizontalSlideViewController: UIViewController, UICollectionViewDataSourc
   var willChangeFocusItem: ((MovementState) -> Void)?
   var didSelectItemAt: ((Int) -> Void)?
 
-  let pageControl: BXPageControl = BXPageControl.centerIndicator
-
+  let pageControl: BXPageControl = BXPageControl.default
   lazy var collectionView: UICollectionView = {
     let layout = SnapToCenterCollectionViewLayout()
     layout.minimumSectionInsetLeft = 16
@@ -48,19 +47,22 @@ class HorizontalSlideViewController: UIViewController, UICollectionViewDataSourc
   override func viewDidLoad() {
     super.viewDidLoad()
     view.backgroundColor = .systemBackground
+    let height: CGFloat = 164+16
+
     collectionView.layout(in: self.view) {
       $0.top()
         .leading()
         .trailing()
-        .height(200)
+        .height(height)
     }
 
     pageControl.layout(in: view) {
-      $0.top(constraint: collectionView.bottomAnchor, 20)
+      $0.top(constraint: collectionView.bottomAnchor, 10)
         .leading()
         .trailing()
     }
     pageControl.setNumberOfPages(numberOfItems)
+    pageControl.alignment = .center
 
 
     // center first/last by setting inset
