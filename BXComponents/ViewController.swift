@@ -20,7 +20,7 @@ class ViewController: UIViewController {
     textView.isEditable = false
     textView.isScrollEnabled = false
     let attachment = NSTextAttachment()
-    attachment.image = UIImage(systemName: "star.fill")
+//    attachment.image = UIImage(systemName: "star.fill")
     textView.attributedText = NSAttributedString(string: "Hello World", attributes: [.attachment: attachment])
     return textView
   }()
@@ -63,7 +63,7 @@ class ViewController: UIViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
-    view.backgroundColor = .systemBackground
+    view.backgroundColor = .white
   }
   override func loadView() {
     super.loadView()
