@@ -32,7 +32,7 @@ public class Capsule: UIView {
   // MARK: Life cycle
   
   // MARK: Init
-  public init(fillColor: UIColor = .secondarySystemFill, strokeColor: UIColor = .separator, lineWidth: CGFloat = 0.4) {
+  public init(fillColor: UIColor = .black, strokeColor: UIColor = .gray, lineWidth: CGFloat = 0.4) {
     self.fillColor = fillColor
     self.strokeColor = strokeColor
     self.lineWidth = lineWidth
