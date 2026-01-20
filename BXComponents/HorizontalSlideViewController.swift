@@ -22,16 +22,16 @@ class HorizontalSlideViewController: UIViewController, UICollectionViewDataSourc
     layout.minimumSectionInsetRight = 16
     layout.sectionInsetTop = 0
     layout.sectionInsetBottom = 0
-    layout.interItemSpacing = 16
+    layout.interItemSpacing = 0
     layout.centerFirstItem = false
     layout.focusChangeDelegate = self
-    let height: CGFloat = 164+16
-    let width: CGFloat = height * 16 / 10
+    let height: CGFloat = view.frame.width
+    let width: CGFloat = height
     layout.itemSize = CGSize(width: width, height: height)
     let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
     collectionView.backgroundColor = .clear
-    collectionView.contentInset.left = 16
-    collectionView.contentInset.right = 16
+    collectionView.contentInset.left = 0
+    collectionView.contentInset.right = 0
     collectionView.showsHorizontalScrollIndicator = false
     collectionView.register(RandomizedCollection.self, forCellWithReuseIdentifier: "RandomizedCollection")
     collectionView.dataSource = self
@@ -47,7 +47,7 @@ class HorizontalSlideViewController: UIViewController, UICollectionViewDataSourc
   override func viewDidLoad() {
     super.viewDidLoad()
     view.backgroundColor = .white
-    let height: CGFloat = 164+16
+    let height: CGFloat = view.frame.width
 
     collectionView.layout(in: self.view) {
       $0.top()
