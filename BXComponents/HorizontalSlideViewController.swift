@@ -18,8 +18,8 @@ class HorizontalSlideViewController: UIViewController, UICollectionViewDataSourc
   let pageControl: BXPageControl = BXPageControl.caterpillar
   lazy var collectionView: UICollectionView = {
     let layout = SnapToCenterCollectionViewLayout()
-    layout.minimumSectionInsetLeft = 16
-    layout.minimumSectionInsetRight = 16
+    layout.minimumSectionInsetLeft = 0
+    layout.minimumSectionInsetRight = 0
     layout.sectionInsetTop = 0
     layout.sectionInsetBottom = 0
     layout.interItemSpacing = 0
