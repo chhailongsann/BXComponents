@@ -46,7 +46,7 @@ class HorizontalSlideViewController: UIViewController, UICollectionViewDataSourc
 
   override func viewDidLoad() {
     super.viewDidLoad()
-    view.backgroundColor = .white
+    view.backgroundColor = .gray
     let height: CGFloat = 164+16
 
     collectionView.layout(in: self.view) {
@@ -118,7 +118,7 @@ extension HorizontalSlideViewController: FocusChangeDelegate {
 class RandomizedCollection: UICollectionViewCell {
   override init(frame: CGRect) {
     super.init(frame: frame)
-    contentView.backgroundColor = .random
+    contentView.backgroundColor = .darkGray
     contentView.layer.cornerRadius = 8
     contentView.clipsToBounds = true
   }

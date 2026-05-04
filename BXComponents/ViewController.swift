@@ -14,6 +14,12 @@ class ViewController: UIViewController {
   
 //  let pageControl: BXPageControl = .init(alignment: .center)
   let sliderView = HorizontalSlideViewController()
+  lazy var tableView: UITableView = .init(frame: .zero, style: .plain).config {
+    $0.dataSource = self
+    $0.register(UITableViewCell.self, forCellReuseIdentifier: "cellid")
+  }
+  
+  let wheeler = Wheeler()
 
   let textView: UITextView = {
     let textView = UITextView()
@@ -64,53 +70,37 @@ class ViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     view.backgroundColor = .white
+    title = "table"
   }
   override func loadView() {
     super.loadView()
-
-    sliderView.view.layout(in: view) {
-      $0.top()
-        .leading()
-        .trailing()
-        .height(200)
-    }
-//    pageControl.layout(in: view) {
-//      $0.top(constraint: sliderView.view.bottomAnchor, 20)
-//        .leading()
-//        .trailing()
-//    }
-//    sliderView.didSelectItemAt = { [weak self] index in
-//      self?.pageControl.setCurrentPage(index)
-//    }
-//    sliderView.willChangeFocusItem = { [weak self] movement in
-//      if movement == .backward {
-//        self?.pageControl.previous()
-//      } else {
-//        self?.pageControl.next()
+//    
+//    ImageResource.warmTextureWallpaper.loadAsync { image in
+//      let imageView = UIImageView(image: image)
+//      self.view.addSubview(imageView)
+//      imageView.layout(in: self.view) {
+//        $0.fill() 
 //      }
 //    }
-
-    let text = UILabel()
-    text.text = "Hello World"
-    text.layout(in: view) {
-      $0.center()
-    }
-    liquidGlassContainer.layout(in: view) {
-      $0.top(constraint: sliderView.view.topAnchor)
+    
+    let image = ImageResource.warmTextureWallpaper
+    wheeler.layout(in: view) {
+      $0.centerY()
         .leading()
         .trailing()
         .height(40)
     }
-
-    liquidGlassContainer1.layout(in: view) {
-      $0.top(constraint: liquidGlassContainer.bottomAnchor)
-        .leading()
-        .trailing()
-        .height(40)
-    }
-
-
   }
   // MARK: ACTIONS
   
+}
+
+extension ViewController: UITableViewDataSource {
+  func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    4
+  }
+  
+  func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    return UITableViewCell(style: .subtitle, reuseIdentifier: "cellid")
+  }
 }
