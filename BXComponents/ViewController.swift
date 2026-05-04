@@ -40,10 +40,13 @@ class ViewController: UIViewController {
 
     view.backgroundColor = .systemBackground
 
-    button.layout(in: self.view) {
-      $0.center()
+    let wheeler = Wheeler()
+    wheeler.layout(in: self.view) {
+      $0.centerY()
+        .leading()
+        .trailing()
+        .height(40)
     }
-
   }
 
   deinit {
