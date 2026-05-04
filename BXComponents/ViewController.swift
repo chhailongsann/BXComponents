@@ -9,86 +9,91 @@ import UIKit
 import BXAnchor
 
 class ViewController: UIViewController {
-  
-  var isJiggling: Bool = false
-  
-//  let pageControl: BXPageControl = .init(alignment: .center)
-  let sliderView = HorizontalSlideViewController()
-  lazy var tableView: UITableView = .init(frame: .zero, style: .plain).config {
-    $0.dataSource = self
-    $0.register(UITableViewCell.self, forCellReuseIdentifier: "cellid")
+
+  private var searchTask: Task<Void, Never>?
+
+  private let label = UILabel().config {
+    $0.text = ""
+    $0.numberOfLines = 0
   }
-  
-  let wheeler = Wheeler()
 
-  let textView: UITextView = {
-    let textView = UITextView()
-    textView.isEditable = false
-    textView.isScrollEnabled = false
-    let attachment = NSTextAttachment()
-//    attachment.image = UIImage(systemName: "star.fill")
-    textView.attributedText = NSAttributedString(string: "Hello World", attributes: [.attachment: attachment])
-    return textView
-  }()
-
-  let liquidGlassContainer: UIView = {
-    let view = UIView()
-    view.backgroundColor = .clear
-    let visualEffect: UIVisualEffect
-
-    if #available(iOS 26.0, *) {
-      visualEffect = UIGlassContainerEffect()
-    } else {
-      visualEffect = UIBlurEffect(style: .regular)
+  private lazy var button = UIButton(type: .system).config {
+    $0.setTitle("Search", for: .normal)
+    let action = UIAction { _ in
+      self.search("keyword")
     }
-    let visualEffectView = UIVisualEffectView(effect: visualEffect)
-    view.addSubview(visualEffectView)
-    visualEffectView.layout(in: view) {
-      $0.fill()
-    }
-    return view
-  }()
+    $0.addAction(action, for: .touchUpInside)
+  }
 
-  let liquidGlassContainer1: UIView = {
-    let view = UIView()
-    view.backgroundColor = .clear
-    let visualEffect: UIVisualEffect
+  private var displayLink: CADisplayLink?
+  private var lastTimestamp: CFTimeInterval = 0
+  private var accumulatedTime: CFTimeInterval = 0
 
-    if #available(iOS 26.0, *) {
-      visualEffect = UIGlassContainerEffect()
-    } else {
-      visualEffect = UIBlurEffect(style: .regular)
-    }
-    let visualEffectView = UIVisualEffectView(effect: visualEffect)
-    view.addSubview(visualEffectView)
-    visualEffectView.layout(in: view) {
-      $0.fill()
-    }
-    return view
-  }()
+  private let textToAnimate = "Here’s a clear, practical UIKit example showing how to use CADisplayLink to run code once per screen refresh (typically 60 Hz or 120 Hz on ProMotion). This is useful for animations that need to update at a fixed interval, regardless of the user's frame rate. In this example, we're animating a label to type out a string one character at a time. You can modify the string and the animation speed by changing the `textToAnimate` and `characterInterval` constants. Happy coding!"
+  private var currentIndex = 0
+
+  // Adjust this to control speed (seconds per character)
+  private let characterInterval: CFTimeInterval = 0.08
 
   override func viewDidLoad() {
     super.viewDidLoad()
-    view.backgroundColor = .white
-    title = "table"
+
+    view.backgroundColor = .systemBackground
+
+    button.layout(in: self.view) {
+      $0.center()
+    }
+
   }
-  override func loadView() {
-    super.loadView()
-//    
-//    ImageResource.warmTextureWallpaper.loadAsync { image in
-//      let imageView = UIImageView(image: image)
-//      self.view.addSubview(imageView)
-//      imageView.layout(in: self.view) {
-//        $0.fill() 
-//      }
-//    }
-    
-    let image = ImageResource.warmTextureWallpaper
-    wheeler.layout(in: view) {
-      $0.centerY()
-        .leading()
-        .trailing()
-        .height(40)
+
+  deinit {
+    displayLink?.invalidate()
+  }
+  private func startAnimation() {
+    displayLink = CADisplayLink(target: self, selector: #selector(update))
+    displayLink?.add(to: .main, forMode: .common)
+  }
+
+  @objc private func update(link: CADisplayLink) {
+    if lastTimestamp == 0 {
+      lastTimestamp = link.timestamp
+      return
+    }
+
+    let delta = link.timestamp - lastTimestamp
+    lastTimestamp = link.timestamp
+    accumulatedTime += delta
+
+    while accumulatedTime >= characterInterval {
+      accumulatedTime -= characterInterval
+      appendNextCharacter()
+    }
+  }
+
+  private func appendNextCharacter() {
+    guard currentIndex < textToAnimate.count else {
+      displayLink?.invalidate()
+      displayLink = nil
+      return
+    }
+
+    let index = textToAnimate.index(
+      textToAnimate.startIndex,
+      offsetBy: currentIndex
+    )
+
+    label.text?.append(textToAnimate[index])
+    currentIndex += 1
+  }
+
+
+  func search(_ query: String) {
+    searchTask?.cancel()
+    searchTask = Task {
+      for _ in 1...3 {
+        try? await Task.sleep(nanoseconds: 500_000_000)
+      }
+      print("Search results for: \(query)")
     }
   }
   // MARK: ACTIONS

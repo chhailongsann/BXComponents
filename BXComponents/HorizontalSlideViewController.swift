@@ -18,20 +18,20 @@ class HorizontalSlideViewController: UIViewController, UICollectionViewDataSourc
   let pageControl: BXPageControl = BXPageControl.caterpillar
   lazy var collectionView: UICollectionView = {
     let layout = SnapToCenterCollectionViewLayout()
-    layout.minimumSectionInsetLeft = 16
-    layout.minimumSectionInsetRight = 16
+    layout.minimumSectionInsetLeft = 0
+    layout.minimumSectionInsetRight = 0
     layout.sectionInsetTop = 0
     layout.sectionInsetBottom = 0
-    layout.interItemSpacing = 16
+    layout.interItemSpacing = 0
     layout.centerFirstItem = false
     layout.focusChangeDelegate = self
-    let height: CGFloat = 164+16
-    let width: CGFloat = height * 16 / 10
+    let height: CGFloat = view.frame.width
+    let width: CGFloat = height
     layout.itemSize = CGSize(width: width, height: height)
     let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
     collectionView.backgroundColor = .clear
-    collectionView.contentInset.left = 16
-    collectionView.contentInset.right = 16
+    collectionView.contentInset.left = 0
+    collectionView.contentInset.right = 0
     collectionView.showsHorizontalScrollIndicator = false
     collectionView.register(RandomizedCollection.self, forCellWithReuseIdentifier: "RandomizedCollection")
     collectionView.dataSource = self
