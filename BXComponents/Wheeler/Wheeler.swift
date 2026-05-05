@@ -36,12 +36,16 @@ final class Wheeler: UIView {
     }
     
     scrollView.showsHorizontalScrollIndicator = false
-//    switch axis {
-//    case .horizontal:
-//      scrollview.bouncesVertically = false
-//    case .vertical:
-//      scrollview.bouncesHorizontally = false
-//    }
+    scrollView.showsVerticalScrollIndicator = false
+    switch axis {
+    case .horizontal:
+      scrollView.bouncesVertically = false
+    case .vertical:
+      scrollView.bouncesHorizontally = false
+    }
+    
+    // Delegate
+    self.scrollView.delegate = self
     
   }
   
@@ -55,6 +59,7 @@ final class Wheeler: UIView {
       let dot = UIView(frame: .init(x: CGFloat(i) * (padding+width), y: 0, width: width, height: height))
       let color: UIColor = .random
       dot.backgroundColor = color
+      dot.tag = i
       scrollView.addSubview(dot)
     }
     scrollView.contentSize = .init(width: width * CGFloat(numberOfWheels) + padding * CGFloat(numberOfWheels - 1), height: height)
@@ -70,4 +75,15 @@ final class Wheeler: UIView {
     scrollView.contentInset.right = inset
   }
   
+}
+
+
+extension Wheeler: UIScrollViewDelegate {
+  func scrollViewDidScroll(_ scrollView: UIScrollView) {
+    let subviews = scrollView.subviews
+    scrollView.subviews.forEach { subview in
+      let location = subview.convert(subview.bounds, to: scrollView)
+      print(location.origin)
+    }
+  }
 }
