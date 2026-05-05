@@ -43,8 +43,8 @@ class ViewController: UIViewController {
     let wheeler = Wheeler()
     wheeler.layout(in: self.view) {
       $0.centerY()
-        .leading()
-        .trailing()
+        .leading(100)
+        .trailing(100)
         .height(40)
     }
   }

@@ -14,7 +14,7 @@ final class Wheeler: UIView {
     case vertical
   }
   
-  private var scrollview: UIScrollView!
+  private var scrollView: UIScrollView!
   
   private let axis: Axis
   init(axis: Axis = .horizontal) {
@@ -30,12 +30,12 @@ final class Wheeler: UIView {
   
   private func setupScrollView() {
 //    backgroundColor = .systemBackground
-    scrollview = UIScrollView()
-    scrollview.layout(in: self) {
+    scrollView = UIScrollView()
+    scrollView.layout(in: self) {
       $0.fill()
     }
     
-    scrollview.showsHorizontalScrollIndicator = true
+    scrollView.showsHorizontalScrollIndicator = false
 //    switch axis {
 //    case .horizontal:
 //      scrollview.bouncesVertically = false
@@ -45,13 +45,29 @@ final class Wheeler: UIView {
     
   }
   
+  private let numberOfWheels: Int = 120
+  private let padding: CGFloat = 12
+  private let width: CGFloat = 3
+  private let height: CGFloat = 30
+  
   private func setupWheels() {
-    for i in 0..<120 {
-      let dot = UIView(frame: .init(x: i * 12, y: 0, width: 2, height: 30))
+    for i in 0..<numberOfWheels {
+      let dot = UIView(frame: .init(x: CGFloat(i) * (padding+width), y: 0, width: width, height: height))
       let color: UIColor = .random
       dot.backgroundColor = color
-      scrollview.addSubview(dot)
+      scrollView.addSubview(dot)
     }
-    scrollview.contentSize = .init(width: 2*120 + 12*119, height: 30)
+    scrollView.contentSize = .init(width: width * CGFloat(numberOfWheels) + padding * CGFloat(numberOfWheels - 1), height: height)
+    let containerWidth = bounds.width
+    scrollView.contentInset.left = containerWidth/2
+    scrollView.contentInset.right = containerWidth/2
   }
+  
+  override func layoutSubviews() {
+    super.layoutSubviews()
+    let inset = bounds.width / 2
+    scrollView.contentInset.left = inset
+    scrollView.contentInset.right = inset
+  }
+  
 }
