@@ -40,13 +40,26 @@ class ViewController: UIViewController {
 
     view.backgroundColor = .systemBackground
 
-    let wheeler = Wheeler()
+    let wheeler = WheelScrollView()
     wheeler.layout(in: self.view) {
       $0.centerY()
-        .leading(100)
-        .trailing(100)
+        .leading(20)
+        .trailing(20)
+        .height(50)
+    }
+    
+    let arrowUp = UIImage(systemName: "arrowtriangle.up.fill")!
+    let imageView = UIImageView(image: arrowUp)
+    imageView.contentMode = .scaleAspectFit
+    view.addSubview(imageView)
+    imageView.layout(in: self.view) {
+      $0.top(constraint: wheeler.bottomAnchor, 4)
+        .centerX()
+        .width(40)
         .height(40)
     }
+    
+    view.addSubview(label)
   }
 
   deinit {

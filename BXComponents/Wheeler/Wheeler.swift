@@ -49,13 +49,24 @@ final class Wheeler: UIView {
     
   }
   
-  private let numberOfWheels: Int = 120
-  private let padding: CGFloat = 12
-  private let width: CGFloat = 3
-  private let height: CGFloat = 30
+  private let numberOfWheels: Int = 20
+  private let padding: CGFloat = 32
+  private let width: CGFloat = 30
+  private let height: CGFloat = 50
+  
+  private let step: CGFloat = 12        // distance between ticks
+  private let totalTicks = 100_000
   
   private func setupWheels() {
-    for i in 0..<numberOfWheels {
+    
+    scrollView.decelerationRate = .fast
+    scrollView.showsHorizontalScrollIndicator = false
+    
+    let contentWidth = CGFloat(totalTicks) * step
+    scrollView.contentSize = CGSize(width: contentWidth, height: bounds.height)
+    scrollView.contentInset.left = contentWidth/2
+    scrollView.contentInset.right = contentWidth/2
+    for i in 0..<totalTicks {
       let dot = UIView(frame: .init(x: CGFloat(i) * (padding+width), y: 0, width: width, height: height))
       let color: UIColor = .random
       dot.backgroundColor = color
@@ -68,22 +79,20 @@ final class Wheeler: UIView {
     scrollView.contentInset.right = containerWidth/2
   }
   
-  override func layoutSubviews() {
-    super.layoutSubviews()
-    let inset = bounds.width / 2
-    scrollView.contentInset.left = inset
-    scrollView.contentInset.right = inset
-  }
+//  override func layoutSubviews() {
+//    super.layoutSubviews()
+//    let inset = bounds.width / 2
+//    scrollView.contentInset.left = inset
+//    scrollView.contentInset.right = inset
+//  }
   
 }
 
 
 extension Wheeler: UIScrollViewDelegate {
   func scrollViewDidScroll(_ scrollView: UIScrollView) {
-    let subviews = scrollView.subviews
-    scrollView.subviews.forEach { subview in
-      let location = subview.convert(subview.bounds, to: scrollView)
-      print(location.origin)
-    }
+      }
+  func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+    
   }
 }
