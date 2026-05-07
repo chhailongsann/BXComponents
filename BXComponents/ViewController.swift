@@ -53,7 +53,7 @@ class ViewController: UIViewController {
     imageView.contentMode = .scaleAspectFit
     view.addSubview(imageView)
     imageView.layout(in: self.view) {
-      $0.top(constraint: wheeler.bottomAnchor, 4)
+      $0.top(constraint: wheeler.bottomAnchor, -4)
         .centerX()
         .width(40)
         .height(40)
