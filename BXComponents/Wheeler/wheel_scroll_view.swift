@@ -2,34 +2,33 @@ import UIKit
 import AudioToolbox
 
 final class WheelScrollView: UIView, UIScrollViewDelegate {
-
+  
   private let scrollView = UIScrollView()
   private let contentView = WheelContentView()
-  private let indicator = UIView()
-
+  
   private let step: CGFloat = 12
   private let totalTicks = 100
-
+  
   // Physics
   private var displayLink: CADisplayLink?
   private var velocity: CGFloat = 0
   private var lastTimestamp: CFTimeInterval = 0
-
+  
   // Haptics
   private var lastTick: Int = 0
   private let generator = UIImpactFeedbackGenerator(style: .light)
-
+  
   override init(frame: CGRect) {
     super.init(frame: frame)
     setup()
   }
-
+  
   required init?(coder: NSCoder) {
     super.init(coder: coder)
     generator.prepare()
     setup()
   }
-
+  
   private func setup() {
     backgroundColor = .white
     contentView.backgroundColor = .white
@@ -41,20 +40,18 @@ final class WheelScrollView: UIView, UIScrollViewDelegate {
     addSubview(scrollView)
 
     scrollView.addSubview(contentView)
-
-    indicator.backgroundColor = .systemRed
-    indicator.isUserInteractionEnabled = false
-    addSubview(indicator)
+    contentView.backgroundColor = .clear
+    
   }
-
+  
   override func layoutSubviews() {
     super.layoutSubviews()
-
+    
     scrollView.frame = bounds
-
-    let inset = (bounds.width / 2)
+    
+    let inset = bounds.width / 2
     scrollView.contentInset = UIEdgeInsets(top: 0, left: inset, bottom: 0, right: inset)
-
+    
     let contentWidth = CGFloat(totalTicks) * step
     scrollView.contentSize = CGSize(width: contentWidth, height: bounds.height)
     contentView.frame = CGRect(x: 0, y: 0, width: contentWidth, height: bounds.height)
