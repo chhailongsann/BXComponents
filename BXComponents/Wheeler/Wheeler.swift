@@ -8,7 +8,7 @@
 import UIKit
 import BXAnchor
 
-final class Wheeler: UIView {
+open class Wheeler: UIView {
   enum Axis {
     case horizontal
     case vertical
@@ -24,7 +24,7 @@ final class Wheeler: UIView {
     setupWheels()
   }
   
-  required init?(coder: NSCoder) {
+  required public init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
   
@@ -90,9 +90,10 @@ final class Wheeler: UIView {
 
 
 extension Wheeler: UIScrollViewDelegate {
-  func scrollViewDidScroll(_ scrollView: UIScrollView) {
-      }
-  func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-    
+  public func scrollViewDidScroll(_ scrollView: UIScrollView) {
+
+  }
+  public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+
   }
 }

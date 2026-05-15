@@ -7,7 +7,7 @@
 
 import UIKit
 
-class BXPageControl: UIView {
+open class BXPageControl: UIView {
 
   enum Alignment {
     case leading
@@ -197,7 +197,7 @@ class BXPageControl: UIView {
     setupViews()
   }
 
-  required init?(coder: NSCoder) {
+  required public init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
 
